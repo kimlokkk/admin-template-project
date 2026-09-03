@@ -41,10 +41,10 @@ export function SignUpForm({
 
     try {
       const { error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
         },
       });
       if (error) throw error;
@@ -58,7 +58,7 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="border-0 shadow-none sm:border sm:shadow-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>
           <CardDescription>Create a new account</CardDescription>
@@ -72,6 +72,7 @@ export function SignUpForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -84,6 +85,8 @@ export function SignUpForm({
                 <Input
                   id="password"
                   type="password"
+                  autoComplete="new-password"
+                  minLength={8}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -96,6 +99,8 @@ export function SignUpForm({
                 <Input
                   id="repeat-password"
                   type="password"
+                  autoComplete="new-password"
+                  minLength={8}
                   required
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
